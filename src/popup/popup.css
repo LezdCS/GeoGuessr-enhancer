@@ -1,0 +1,192 @@
+:root{
+    --color-accent: #3DB4F2
+}
+
+html {
+    width:300px;
+    height:350px;
+}
+
+*{
+    margin:0;
+}
+
+body{
+    background-color: #272c38;
+    color: #9fadbd;
+    position: relative;
+    font-family: "Roboto", sans-serif;
+}
+
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+h1{
+    text-align: center;
+    font-family: Franklin Gothic Heavy, sans-serif;
+}
+
+h2{
+    margin-left: 30px;
+    margin-top:20px;
+    margin-bottom: 15px;
+    font-size: 15px;
+}
+
+#header{
+    border-bottom: var(--color-accent) solid ;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+form{
+    padding-top:15px;
+    margin-left: 20px;
+}
+
+.section{
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-bottom: 10px;
+    background-color: #1f232d;
+    height: auto;
+    font-family: "Roboto Medium", sans-serif;
+    border-radius: 5px;
+}
+
+.subsection{
+    margin-bottom: 10px;
+    display: block;
+}
+
+.subsection>label{
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+
+input{
+    border: var(--color-accent) solid 1px ;
+}
+
+input::-webkit-color-swatch {
+    border: none;
+}
+
+#fontSizeArea,#name{
+    font-size: 15px;
+    width: 70px;
+    text-align: left;
+    margin-bottom: 14px;
+}
+
+#fontSizeArea:focus,#name:focus,.buttonTheme:focus,.buttonAccent:focus,input:focus{
+    outline: none;
+}
+
+/*style of the buttons in the theme selection*/
+.buttonTheme{
+    width: 35px;
+    height: 35px;
+    border: var(--color-accent) solid 1px;
+    margin-right: 10px;
+}
+
+.buttonTheme:hover{
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.buttonTheme:hover + #crossDelete{
+    visibility: visible;
+    cursor: pointer;
+}
+
+#crossDelete{
+    visibility: hidden;
+    color: var(--color-accent) ;
+    width:6%;
+    position: absolute;
+    margin-left: -20px;
+    margin-top: -8px;
+}
+
+#crossDelete:hover{
+    visibility: visible;
+    cursor: pointer;
+}
+
+/*style of the buttons in the accent selection*/
+.buttonAccent{
+    width: 20px;
+    height: 20px;
+    border: none;
+    margin-right: 4px;
+    border-radius: 2px;
+}
+
+.buttonAccent:hover{
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+/*style of the credits, the bottom line of the popup*/
+#credits{
+    font-size: 16px;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+a{
+    text-decoration: none;
+    color: var(--color-accent);
+}
+
+a:visited{
+    text-decoration: none;
+    color: var(--color-accent);
+}
+
+#btnAddTheme{
+    position: absolute;
+    font-size: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #272c38;
+    border-radius: 50px;
+}
+
+#buttonSubmitForm{
+    background-color: var(--color-accent);
+    color: white;
+    border: none;
+    padding: 7px 7px 7px 7px;
+    border-radius: 5px;
+    font-family: "Roboto Medium", sans-serif;
+    margin-bottom: 7px;
+}
+
+#buttonSubmitForm:hover{
+    cursor: pointer;
+    box-shadow: 1px 3px 3px black;
+}
+
+input[type="color" i] {
+    width: 60px;
+    height: 20px;
+    background-color: transparent;
+    padding: 0;
+}
+
+input[type="color" i]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+input[type="color" i]:hover{
+    cursor: pointer;
+}

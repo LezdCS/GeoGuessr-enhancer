@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add theme</title>
+    <link type="text/css" href="popup.css" rel="stylesheet"/>
+</head>
+<body>
+<div> <!-- style="overflow-y:scroll;" > -->
+    <div id="header" style="background-color: #1f232d ">
+        <h1>GeoNotes</h1>
+    </div>
+    <div style="margin-left: 10px; margin-top: 10px; font-size: 14px;">
+        <a href="popup.html" >Return</a>
+    </div>
+    <h2>Create your theme</h2>
+    <div class="section">
+        <form id="formAddTheme">
+            <div class="subsection">
+                <label for="name">Name</label>
+                <input id="name" type="text"/>
+            </div>
+            <div class="subsection">
+                <label for="background">Background Color</label>
+                <input id="background" type="color"/>
+            </div>
+            <div class="subsection">
+                <label for="text_header">Main text Color</label>
+                <input id="text_header" type="color"/>
+            </div>
+            <div class="subsection">
+                <label for="text_body">Body text Color</label>
+                <input id="text_body" type="color"/>
+            </div>
+            <br>
+            <button id="buttonSubmitForm" type="submit">Create</button>
+        </form>
+    </div>
+    <div id="credits">
+        <span>Created by <a href="https://twitter.com/LezdCS" target="_blank">Lezd</a></span>
+    </div>
+</div>
+<script type="module" src="add_theme.js"></script>
+<script type="module" src="get_accent_color.js"></script>
+</body>
+</html>
