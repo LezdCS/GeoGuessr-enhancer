@@ -7,3 +7,6 @@ directly from the game.
 
 Find it on the Chrome web store : 
 https://chrome.google.com/webstore/detail/geoguessr-enhancer/ajnpfenkneeahpbkcpbiclbckgiogbbb
+
+- 01/01/2021 : 100 users/week 🎉
+- 11/01/2021 : 200 users/week 🎉
