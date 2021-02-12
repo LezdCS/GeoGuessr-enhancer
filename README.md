@@ -10,3 +10,4 @@ https://chrome.google.com/webstore/detail/geoguessr-enhancer/ajnpfenkneeahpbkcpb
 
 - 01/01/2021 : 100 users/week 🎉
 - 11/01/2021 : 200 users/week 🎉
+- 11/02/2021 : 300 users/week 🎉
