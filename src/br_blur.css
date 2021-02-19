@@ -1,0 +1,5 @@
+.player-list__player-avatar .circle__content,
+.player-list__guess-avatar .circle__content,
+.user-grid__circle .circle__content {
+    filter: blur(4px) !important;
+}
