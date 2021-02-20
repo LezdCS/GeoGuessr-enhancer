@@ -148,3 +148,37 @@ Object.entries(accent_colors).forEach(([key, value]) => {
     }
     accentsColorsDiv.appendChild(accent)
 });
+
+
+
+
+let blurring_photos = document.getElementById("blurring_photos")
+blurring_photos.onclick=function (){
+    if(blurring_photos.checked){
+        chrome.storage.local.set({'blurring_photos': true }, function() {});
+    }else{
+        chrome.storage.local.set({'blurring_photos': false }, function() {});
+    }
+}
+
+let censor_nicknames = document.getElementById("censor_nicknames")
+censor_nicknames.onclick=function (){
+    if(censor_nicknames.checked){
+        chrome.storage.local.set({'censor_nicknames': true }, function() {});
+    }else{
+        chrome.storage.local.set({'censor_nicknames': false }, function() {});
+    }
+}
+
+chrome.storage.local.get(['blurring_photos', 'censor_nicknames'], function(items) {
+    if(items.blurring_photos!==undefined){
+        if(items.blurring_photos){
+            blurring_photos.checked="true";
+        }
+    }
+    if(items.censor_nicknames!==undefined) {
+        if(items.censor_nicknames){
+            censor_nicknames.checked="true";
+        }
+    }
+});

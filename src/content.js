@@ -97,7 +97,7 @@ function battle_royale_lobby(){
 
     const blurring_photos_label = document.createElement("label");
     blurring_photos_label.style.marginRight="20px"
-    blurring_photos_label.innerHTML = "<label for=\"blurring_photos\">Blur avatars</label>";
+    blurring_photos_label.innerHTML = "<label for=\"blurring_photos\">Blur the avatars</label>";
 
     const censor_nicknames = document.createElement("input");
     censor_nicknames.type="checkbox";
@@ -163,7 +163,9 @@ function battle_royale_game(){
 
                         let elements = document.querySelectorAll('.user-nick');
                         for(let i=0; i<elements.length; i++){
-                            elements[i].innerHTML = "******"
+                            if(elements[i].parentNode.className!=="label-1") {
+                                elements[i].innerHTML = "******"
+                            }
                         }
 
                     }
