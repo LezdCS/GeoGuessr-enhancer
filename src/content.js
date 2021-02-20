@@ -40,10 +40,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                     try{
                         battle_royale_game();
                     }catch (e){
-                        setTimeout(wait_game,100);
+                        setTimeout(wait_battle_royal_game,100);
                     }
                 }else{
-                    setTimeout(wait_game,100);
+                    setTimeout(wait_battle_royal_game,100);
                 }
             }
 
