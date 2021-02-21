@@ -251,6 +251,14 @@ function notes(){
     // make appear or disapear the notes when click on the notes button
     function openNotes(){
 
+        //chrome.runtime.sendMessage({message: "screenshot"}, function(response) {
+        //  console.log(response.message)
+        //  divGlobalNote.style.backgroundImage = response.message;
+        //  const imageScreen = document.createElement("img");
+        //  imageScreen.src=response.message;
+        //});
+
+
         if(divGlobalNote.style.visibility==="hidden"){
             divGlobalNote.style = "position: absolute; z-index: 4;\n" +
                 "visibility: visible; font-size: 15px; top:"+toppos+"; left:"+leftpos+";"
