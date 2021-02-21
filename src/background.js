@@ -22,8 +22,3 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
         //}
     //  return true;
 //});
-
-chrome.runtime.onUpdateAvailable.addListener(function(details) {
-    console.log("updating to version " + details.version);
-    chrome.runtime.reload();
-});
