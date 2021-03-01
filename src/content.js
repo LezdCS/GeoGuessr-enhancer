@@ -1,6 +1,7 @@
 let noteArea;
 let header;
-let leftpos = "70px", toppos ="0px"
+let leftpos = "70px", toppos ="0px";
+let compteurScreenshots = 0;
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     const page = window.location;
@@ -10,6 +11,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             document.body.removeEventListener('click', checkElementClicked);
             let compass = document.getElementsByClassName("compass__indicator");
 
+            // The actual wait system is kinda bad (not stable and ugly code)
+            // TODO : change wait system with a new stable one
             function wait_game() {
                 if (compass.length !== undefined) {
                     try{
@@ -60,13 +63,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
     }
 
-    //requests from the popup
+    //Color changing : request from the popup
     if(request.message.startsWith("changeTheme")){
         if(url[1] === "game" || url[1]=== "challenge"){
             const themeINFOS = JSON.parse(request.message.substring(11));
             colors_changing(themeINFOS.background,themeINFOS.text_header,themeINFOS.text_body);
         }
     }
+    //Textarea font size changing : request from the popup
     if(request.message.startsWith("changeFont")){
         if(url[1] === "game" || url[1]=== "challenge"){
             const fontsize = JSON.parse(request.message.substring(10));
@@ -138,6 +142,7 @@ function battle_royale_game(){
 
     function blurring_photos(){
 
+        //insert CSS that blur avatars
         let link = document.createElement("link");
         let css_url = chrome.runtime.getURL("src/br_blur.css");
         link.href = css_url;
@@ -222,7 +227,7 @@ function colors_changing(backgroud, header, body){
         game_bodies[i].style.color = body;
     }
 
-    const headerNotes = document.getElementById("divGlobalNoteheader")
+    const headerNotes = document.getElementById("divGlobalNoteHeader")
 
     if(backgroud!=="white"){
         headerNotes.style.backgroundColor = backgroud;
@@ -251,14 +256,6 @@ function notes(){
     // make appear or disapear the notes when click on the notes button
     function openNotes(){
 
-        //chrome.runtime.sendMessage({message: "screenshot"}, function(response) {
-        //  console.log(response.message)
-        //  divGlobalNote.style.backgroundImage = response.message;
-        //  const imageScreen = document.createElement("img");
-        //  imageScreen.src=response.message;
-        //});
-
-
         if(divGlobalNote.style.visibility==="hidden"){
             divGlobalNote.style = "position: absolute; z-index: 4;\n" +
                 "visibility: visible; font-size: 15px; top:"+toppos+"; left:"+leftpos+";"
@@ -269,49 +266,102 @@ function notes(){
         }
     }
 
+    function screenshot(){
+
+        let divGlobalScreen = document.createElement("div");
+        divGlobalScreen.id="divGlobalScreen"+compteurScreenshots;
+        divGlobalScreen.style = "position: absolute; z-index: 4; left: 70px; top: 0px"
+        divGlobalScreen.onclick = function () {event.stopPropagation();}
+
+        screenTooltip.appendChild(divGlobalScreen);
+        //header
+        let divHeadScreen = document.createElement("div");
+        divHeadScreen.id="divGlobalScreen"+compteurScreenshots+"Header"+compteurScreenshots;
+        divHeadScreen.style = "padding: 7px; cursor: move; background-color: var(--color-grey-80); color: #fff;"
+        divHeadScreen.onclick = function () {event.stopPropagation();}
+        divGlobalScreen.appendChild(divHeadScreen);
+
+        dragElement(document.getElementById("divGlobalScreen"+compteurScreenshots));
+
+        //title of header
+        let titleScreen = document.createElement("p");
+        titleScreen.style="text-align:center;"
+        titleScreen.innerText="Screenshot"
+        divHeadScreen.appendChild(titleScreen);
+
+        //Button to close a screenshot
+        let crossClose = document.createElement("p")
+        crossClose.innerText="X";
+        crossClose.style= "cursor: pointer"
+        crossClose.onclick = function (){ divGlobalScreen.remove() }
+        divHeadScreen.appendChild(crossClose);
+
+        //increase this variable, used to manage multiple screenshots
+        compteurScreenshots++;
+
+        //SEND request to background.js to make the screenshot
+        chrome.runtime.sendMessage({message: "screenshot"}, function(response) {
+            const imageScreen = document.createElement("textarea");
+            imageScreen.style="width:720px; height:576px; outline: none !important;"
+            imageScreen.readOnly="yes"
+            imageScreen.style.backgroundImage="url('"+response.message+"')";
+
+            //imageScreen.src=response.message;
+            divGlobalScreen.appendChild(imageScreen)
+        });
+    }
+
     //getting the group of left buttons
     const game_status = document.querySelector(".game-layout__controls");
 
-    //creation the div child for the notes
-    const noteCase = document.createElement("div");
-    game_status.insertBefore(noteCase, game_status.children[1]);
-    noteCase.className="hud-button-group";
+    //creation the div child for the screen & notes buttons
+    const screenCase = document.createElement("div");
+    game_status.insertBefore(screenCase, game_status.children[1]);
+    screenCase.className="hud-button-group";
 
+    ///////SCREENSHOT///////
+    //creating the first child div for SCREENSHOT div
+    let screenTooltip = document.createElement("div");
+    screenCase.appendChild(screenTooltip);
+    screenTooltip.className="tooltip";
+    screenTooltip.onclick = function(){screenshot()};
+    //creating the first child div for screenTooltip div
+    let screenButton = document.createElement("button");
+    screenTooltip.appendChild(screenButton);
+    screenButton.className="hud-button";
+    screenButton.innerText="📷";
+    screenButton.style.marginTop="16px";
+
+    ///////NOTES///////
     //creating the first child div for noteCase div
-    const noteTooltip = document.createElement("div");
-    noteCase.appendChild(noteTooltip);
+    let noteTooltip = document.createElement("div");
+    screenCase.appendChild(noteTooltip);
     noteTooltip.className="tooltip";
     noteTooltip.onclick = function(){dragElement(document.getElementById("divGlobalNote")); openNotes()};
-
     //creating the first child div for noteTooltip div
-    const noteButton = document.createElement("button");
+    let noteButton = document.createElement("button");
     noteTooltip.appendChild(noteButton);
     noteButton.className="hud-button";
     noteButton.innerText="📝";
-    noteButton.style.marginTop="16px";
     noteButton.style.marginBottom="-20px";
 
-
     //creating the first child div for noteButton div
-    var divGlobalNote = document.createElement("div");
+    let divGlobalNote = document.createElement("div");
     divGlobalNote.id="divGlobalNote";
     divGlobalNote.style = "position: absolute; z-index: 4; visibility: hidden;"
     divGlobalNote.onclick = function () {event.stopPropagation();}
     noteTooltip.appendChild(divGlobalNote);
-
     //header
-    var divHeadNotes = document.createElement("div");
-    divHeadNotes.id="divGlobalNoteheader";
+    let divHeadNotes = document.createElement("div");
+    divHeadNotes.id="divGlobalNoteHeader";
     divHeadNotes.style = "padding: 7px; cursor: move; background-color: var(--color-grey-80); color: #fff;"
     divHeadNotes.onclick = function () {event.stopPropagation();}
     divGlobalNote.appendChild(divHeadNotes);
-
     //title of header
-    var titleNotes = document.createElement("p");
+    let titleNotes = document.createElement("p");
     titleNotes.style="text-align:center;"
     titleNotes.innerText="Notes"
     divHeadNotes.appendChild(titleNotes);
-
     //textarea
     noteArea = document.createElement("textarea");
     noteArea.className="noteArea";
@@ -328,65 +378,77 @@ function notes(){
 }
 
 
-// function to drag the textarea
 function dragElement(elmnt) {
 
-    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0, prevX=0, prevY=0;
-    if (document.getElementById(elmnt.id + "header")) {
-        // if present, the header is where you move the DIV from:
-        document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
-    } else {
-        // otherwise, move the DIV from anywhere inside the DIV:
-        elmnt.onmousedown = dragMouseDown;
+    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0, prevX=0, prevY=0;
+    if (document.getElementById(elmnt.id + "Header"+compteurScreenshots))
+    {
+        document.getElementById(elmnt.id + "Header"+compteurScreenshots).onmousedown = dragMouseDown;
+    }
+    else if (document.getElementById(elmnt.id + "Header"))
+    {
+        document.getElementById(elmnt.id + "Header").onmousedown = dragMouseDown;
     }
 
     function dragMouseDown(e) {
-        e = e || window.event;
-        e.preventDefault();
         // get the mouse cursor position at startup:
         pos3 = e.clientX;
-        prevX = pos3;
         pos4 = e.clientY;
+
+        // set prevX and prevY, variables used for collisions
+        prevX = pos3;
         prevY = pos4;
-        document.onmouseup = closeDragElement;
-        // call a function whenever the cursor moves:
+
+        // call elementDrag function whenever the cursor moves:
         document.onmousemove = elementDrag;
+        // call closeDragElement function when user release click:
+        document.onmouseup = closeDragElement;
     }
 
     function elementDrag(e) {
 
         function move_notes_window(){
+            //modify element position
             elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
             elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
         }
 
+        // Set prevX and prevY, variables used for collisions
         prevX = pos3;
         prevY = pos4;
-        e = e || window.event;
-        e.preventDefault();
-        // calculate the new cursor position:
+
+        // Modify pos1 and pos2, the ""vector"" of element movement
         pos1 = pos3 - e.clientX;
         pos2 = pos4 - e.clientY;
+        // pos3 and pos4 get new cursor position
         pos3 = e.clientX;
         pos4 = e.clientY;
-        // set the element's new position:
 
-        //collisions
-        if(elmnt.getBoundingClientRect().left<=0) { //check left colide
+        ////////////COLLISIONS////////////
+        //check Left collision
+        if(elmnt.getBoundingClientRect().left<=0) {
             if(e.clientX>prevX){move_notes_window();}
-        }else if(elmnt.getBoundingClientRect().right >= document.body.offsetWidth){ //check right colide
+        }
+        //check Right collision
+        else if(elmnt.getBoundingClientRect().right >= document.body.offsetWidth){
             if(e.clientX<prevX){move_notes_window();}
-        }else if(elmnt.getBoundingClientRect().bottom >= document.body.offsetHeight){ //check bottom colide
+        }
+        //check Bottom collision
+        else if(elmnt.getBoundingClientRect().bottom >= document.body.offsetHeight){
             if(e.clientY<prevY){move_notes_window();}
-        }else if(elmnt.getBoundingClientRect().top <= header.offsetHeight){ //check top colide
+        }
+        //check Top collision
+        else if(elmnt.getBoundingClientRect().top <= header.offsetHeight){
             if(e.clientY>prevY){move_notes_window();}
         }
-        //if no colide then :
-        else{move_notes_window();}
+        else{
+            // if not in situation of collision, just call function to move
+            move_notes_window();
         }
+    }
 
     function closeDragElement() {
-        // stop moving when mouse button is released:
+        // unbind when mouse button is released:
         document.onmouseup = null;
         document.onmousemove = null;
     }
