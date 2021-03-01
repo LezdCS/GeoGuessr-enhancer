@@ -277,37 +277,58 @@ function notes(){
         //header
         let divHeadScreen = document.createElement("div");
         divHeadScreen.id="divGlobalScreen"+compteurScreenshots+"Header"+compteurScreenshots;
-        divHeadScreen.style = "padding: 7px; cursor: move; background-color: var(--color-grey-80); color: #fff;"
+        divHeadScreen.style = "padding: 7px; cursor: move; background-color: var(--color-grey-80); color: #fff; visibility: hidden;"
         divHeadScreen.onclick = function () {event.stopPropagation();}
         divGlobalScreen.appendChild(divHeadScreen);
 
         dragElement(document.getElementById("divGlobalScreen"+compteurScreenshots));
 
-        //title of header
-        let titleScreen = document.createElement("p");
-        titleScreen.style="text-align:center;"
-        titleScreen.innerText="Screenshot"
+        //Button to close a screenshot
+        let titleScreen = document.createElement("p")
+        titleScreen.innerText="Screenshot #"+compteurScreenshots;
+        titleScreen.style= "text-align: center;"
         divHeadScreen.appendChild(titleScreen);
 
         //Button to close a screenshot
         let crossClose = document.createElement("p")
-        crossClose.innerText="X";
-        crossClose.style= "cursor: pointer"
+        crossClose.innerText="Close";
+        crossClose.style= "cursor: pointer; text-align: center; width: fit-content;"
         crossClose.onclick = function (){ divGlobalScreen.remove() }
         divHeadScreen.appendChild(crossClose);
+
+        //Button to reduce a screenshot
+        let reduceButton = document.createElement("p")
+        reduceButton.innerText="Reduce";
+        reduceButton.style= "cursor: pointer; text-align: center; width: fit-content;"
+        reduceButton.onclick = function (){
+            if(reduceButton.innerText==="Reduce"){
+                imageDiv.style.height="0px"
+                reduceButton.innerText="Reopen"
+            }else{
+                imageDiv.style.height="288px"
+                reduceButton.innerText="Reduce"
+            }
+        }
+        divHeadScreen.appendChild(reduceButton);
 
         //increase this variable, used to manage multiple screenshots
         compteurScreenshots++;
 
+        const imageDiv = document.createElement("div");
+        imageDiv.style="width:360px; height:288px; overflow: hidden; overflow-y: scroll; overflow-x: scroll; resize: both;"
+
+
+
         //SEND request to background.js to make the screenshot
         chrome.runtime.sendMessage({message: "screenshot"}, function(response) {
-            const imageScreen = document.createElement("textarea");
-            imageScreen.style="width:720px; height:576px; outline: none !important;"
-            imageScreen.readOnly="yes"
-            imageScreen.style.backgroundImage="url('"+response.message+"')";
 
-            //imageScreen.src=response.message;
-            divGlobalScreen.appendChild(imageScreen)
+            const imageScreen = document.createElement("img");
+            imageScreen.src=response.message;
+            imageDiv.appendChild(imageScreen)
+
+            //prevent the screenshot from integrating the screenshot frame created before
+            divHeadScreen.style.visibility="visible"
+            divGlobalScreen.appendChild(imageDiv)
         });
     }
 
