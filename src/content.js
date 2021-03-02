@@ -2,6 +2,10 @@ let noteArea;
 let header;
 let leftpos = "70px", toppos ="0px";
 let compteurScreenshots = 0;
+let initY;
+let initX;
+let finalX ;
+let finalY;
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     const page = window.location;
@@ -100,8 +104,9 @@ function battle_royale_lobby(){
     }
 
     const blurring_photos_label = document.createElement("label");
+    blurring_photos_label.htmlFor="blurring_photos"
     blurring_photos_label.style.marginRight="20px"
-    blurring_photos_label.innerHTML = "<label for=\"blurring_photos\">Blur the avatars</label>";
+    blurring_photos_label.innerHTML = "Blur the avatars";
 
     const censor_nicknames = document.createElement("input");
     censor_nicknames.type="checkbox";
@@ -117,7 +122,8 @@ function battle_royale_lobby(){
     }
 
     const censor_nicknames_label = document.createElement("label");
-    censor_nicknames_label.innerHTML = "<label for=\"censor_nicknames\">Censoring usernames</label>"
+    censor_nicknames_label.htmlFor="censor_nicknames"
+    censor_nicknames_label.innerHTML = "Censoring usernames"
 
     chrome.storage.local.get(['blurring_photos', 'censor_nicknames'], function(items) {
         if(items.blurring_photos!==undefined){
@@ -253,7 +259,7 @@ function notes(){
         size_changing(items.fontSizeArea);
     });
 
-    // make appear or disapear the notes when click on the notes button
+    // Make appear or disapear the notes when user click on the notes button
     function openNotes(){
 
         if(divGlobalNote.style.visibility==="hidden"){
@@ -268,38 +274,41 @@ function notes(){
 
     function screenshot(){
 
+        //Get the node where insert all the following elements
         let game_layout = document.getElementsByClassName("game-layout")[0]
 
-        let divTestOue = document.createElement("div")
-        divTestOue.style = "z-index: 1;\n" +
-            "    position: absolute;\n"
+        let divScreenshot = document.createElement("div")
+        divScreenshot.style = "z-index: 1; position: absolute;"
+        game_layout.appendChild(divScreenshot)
 
-        game_layout.appendChild(divTestOue)
-
-        let testimage = document.createElement("img")
-        testimage.src="https://img.phonandroid.com/2016/11/fond-ecran-noir.jpg"
-        testimage.style="z-index: 1;\n" +
+        let darkImage = document.createElement("img")
+        darkImage.src="https://img.phonandroid.com/2016/11/fond-ecran-noir.jpg"
+        darkImage.style="z-index: 1;\n" +
             "    position: absolute;\n" +
             "    opacity: 50%;\n" +
             "    cursor: crosshair; " +
             "    -webkit-user-drag: none;"
-        divTestOue.appendChild(testimage)
+        divScreenshot.appendChild(darkImage)
 
+        //Create the canvas to draw rectangle on selecting area to screen
         let canvas = document.createElement("canvas")
         canvas.id="canvasDrawSelection"
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         let ctx = canvas.getContext('2d');
-        divTestOue.appendChild(canvas)
+        divScreenshot.appendChild(canvas)
 
         game_layout.onmousedown = function (e){
 
-            let initX = e.clientX;
-            let initY = e.clientY;
+            initX = e.clientX;
+            initY = e.clientY;
 
             game_layout.onmousemove = function (e){
 
+                //draw rectangle each time mouse move from initial click (onmousedown) to final position (onmouseup)
                 ctx.beginPath();
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 3;
                 ctx.clearRect(0,0,canvas.width, canvas.height);
                 ctx.strokeRect(initX, initY, e.clientX-initX, e.clientY-initY);
                 ctx.closePath();
@@ -307,14 +316,13 @@ function notes(){
 
             game_layout.onmouseup = function (e){
 
-                let finalX = e.clientX;
-                let finalY = e.clientY;
-
+                finalX = e.clientX;
+                finalY = e.clientY;
                 game_layout.onmousedown = null;
                 game_layout.onmousemove = null;
                 game_layout.onmouseup = null;
 
-                divTestOue.remove();
+                divScreenshot.remove();
                 generateScreenshot();
             }
         }
@@ -323,7 +331,7 @@ function notes(){
 
             let divGlobalScreen = document.createElement("div");
             divGlobalScreen.id="divGlobalScreen"+compteurScreenshots;
-            divGlobalScreen.style = "position: absolute; z-index: 4; left: 70px; top: 0px"
+            divGlobalScreen.style = "position: absolute; z-index: 4; left: 70px; top: 0px; min-width: 140px;"
             divGlobalScreen.onclick = function () {event.stopPropagation();}
 
             screenTooltip.appendChild(divGlobalScreen);
@@ -355,10 +363,10 @@ function notes(){
             reduceButton.style= "cursor: pointer; text-align: center; width: fit-content;"
             reduceButton.onclick = function (){
                 if(reduceButton.innerText==="Reduce"){
-                    imageDiv.style.height="0px"
+                    imageDiv.style.display="none"
                     reduceButton.innerText="Reopen"
                 }else{
-                    imageDiv.style.height="288px"
+                    imageDiv.style.display="block"
                     reduceButton.innerText="Reduce"
                 }
             }
@@ -368,14 +376,43 @@ function notes(){
             compteurScreenshots++;
 
             const imageDiv = document.createElement("div");
-            imageDiv.style="width:360px; height:288px; overflow: hidden; overflow-y: scroll; overflow-x: scroll; resize: both;"
+            imageDiv.style="resize: both;"
 
             //SEND request to background.js to make the screenshot
             chrome.runtime.sendMessage({message: "screenshot"}, function(response) {
 
-                const imageScreen = document.createElement("img");
-                imageScreen.src=response.message;
-                imageDiv.appendChild(imageScreen)
+                if(initX>finalX && initY>finalY){
+                    let prevX = initX;
+                    initX = finalX;
+                    finalX = prevX;
+
+                    let prevY = initY;
+                    initY = finalY;
+                    finalY = prevY;
+                }
+
+                const CanvasImageScreen = document.createElement("canvas");
+                CanvasImageScreen.style="border:1px solid #000000;"
+                CanvasImageScreen.width = finalX-initX;
+                CanvasImageScreen.height = finalY-initY
+                let context = CanvasImageScreen.getContext('2d');
+                let imageObj = new Image();
+
+                imageObj.onload = function() {
+                    // draw cropped image
+                    let sourceX = 0;
+                    let sourceY = 0;
+                    let sourceWidth = imageObj.width;
+                    let sourceHeight = imageObj.height;
+                    let destWidth = sourceWidth;
+                    let destHeight = sourceHeight;
+                    let destX = -initX;
+                    let destY = -initY;
+
+                    context.drawImage(imageObj, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+                };
+                imageObj.src = response.message;
+                imageDiv.appendChild(CanvasImageScreen)
 
                 //prevent the screenshot from integrating the screenshot frame created before
                 divHeadScreen.style.visibility="visible"
