@@ -35,6 +35,7 @@
   },
 
   "web_accessible_resources": [
-    "src/br_blur.css"
+    "src/br_blur.css",
+    "src/images/black_background.jpg"
   ]
 }
