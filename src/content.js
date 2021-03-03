@@ -2,10 +2,7 @@ let noteArea;
 let header;
 let leftpos = "70px", toppos ="0px";
 let compteurScreenshots = 0;
-let initY;
-let initX;
-let finalX ;
-let finalY;
+let initY, initX, finalX, finalY;
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     const page = window.location;
@@ -278,12 +275,8 @@ function notes(){
         game_layout.appendChild(divScreenshot)
 
         let darkImage = document.createElement("img")
-        darkImage.src="https://img.phonandroid.com/2016/11/fond-ecran-noir.jpg"
-        darkImage.style="z-index: 1;\n" +
-            "    position: absolute;\n" +
-            "    opacity: 50%;\n" +
-            "    cursor: crosshair; " +
-            "    -webkit-user-drag: none;"
+        darkImage.src=chrome.runtime.getURL("src/images/black_background.jpg");
+        darkImage.style="z-index: 1; position: absolute; opacity: 50%; cursor: crosshair; -webkit-user-drag: none;"
         divScreenshot.appendChild(darkImage)
 
         //Create the canvas to draw rectangle on selecting area to screen
@@ -379,13 +372,8 @@ function notes(){
             chrome.runtime.sendMessage({message: "screenshot"}, function(response) {
 
                 if(initX>finalX && initY>finalY){
-                    let prevX = initX;
-                    initX = finalX;
-                    finalX = prevX;
-
-                    let prevY = initY;
-                    initY = finalY;
-                    finalY = prevY;
+                    initX = [finalX, finalX = initX][0];
+                    initY = [finalY, finalY = initY][0];
                 }
 
                 const CanvasImageScreen = document.createElement("canvas");
@@ -397,16 +385,7 @@ function notes(){
 
                 imageObj.onload = function() {
                     // draw cropped image
-                    let sourceX = 0;
-                    let sourceY = 0;
-                    let sourceWidth = imageObj.width;
-                    let sourceHeight = imageObj.height;
-                    let destWidth = sourceWidth;
-                    let destHeight = sourceHeight;
-                    let destX = -initX;
-                    let destY = -initY;
-
-                    context.drawImage(imageObj, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+                    context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height, -initX, -initY, imageObj.width, imageObj.height);
                 };
                 imageObj.src = response.message;
                 imageDiv.appendChild(CanvasImageScreen)
