@@ -56,6 +56,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
             if(url[1] === "game" || url[1]=== "challenge"){
                 wait_game();
+
             }
             if(url[1] === "battle-royale" && url.length===2){
                 wait_battle_royal_prelobby();
@@ -85,6 +86,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 
 function battle_royale_lobby(){
+
+    //Get node (level-progress__footer) to insert a div element
     const footer = document.querySelector(".level-progress__footer");
     const divButtons = document.createElement("div");
     footer.insertBefore(divButtons, footer.children[0]);
@@ -96,11 +99,7 @@ function battle_royale_lobby(){
     blurring_photos.value="blurring_photos";
     blurring_photos.style.marginBottom="30px"
     blurring_photos.onclick=function (){
-        if(blurring_photos.checked){
-            chrome.storage.local.set({'blurring_photos': true }, function() {});
-        }else{
-            chrome.storage.local.set({'blurring_photos': false }, function() {});
-        }
+        blurring_photos.checked ? chrome.storage.local.set({'blurring_photos': true }) : chrome.storage.local.set({'blurring_photos': false });
     }
 
     const blurring_photos_label = document.createElement("label");
@@ -114,11 +113,7 @@ function battle_royale_lobby(){
     censor_nicknames.name="censor_nicknames";
     censor_nicknames.value="censor_nicknames";
     censor_nicknames.onclick=function (){
-        if(censor_nicknames.checked){
-            chrome.storage.local.set({'censor_nicknames': true }, function() {});
-        }else{
-            chrome.storage.local.set({'censor_nicknames': false }, function() {});
-        }
+        censor_nicknames.checked ? chrome.storage.local.set({'censor_nicknames': true }) : chrome.storage.local.set({'censor_nicknames': false });
     }
 
     const censor_nicknames_label = document.createElement("label");
@@ -127,14 +122,10 @@ function battle_royale_lobby(){
 
     chrome.storage.local.get(['blurring_photos', 'censor_nicknames'], function(items) {
         if(items.blurring_photos!==undefined){
-            if(items.blurring_photos){
-                blurring_photos.checked="true";
-            }
+            items.blurring_photos ? blurring_photos.checked="true" : null
         }
         if(items.censor_nicknames!==undefined) {
-            if(items.censor_nicknames){
-                censor_nicknames.checked="true";
-            }
+            items.censor_nicknames ? censor_nicknames.checked="true" : null;
         }
     });
 
@@ -200,14 +191,10 @@ function battle_royale_game(){
 
     chrome.storage.local.get(['blurring_photos', 'censor_nicknames'], function(items) {
         if(items.blurring_photos!==undefined){
-            if(items.blurring_photos){
-                blurring_photos();
-            }
+            items.blurring_photos ? blurring_photos() : null;
         }
         if(items.censor_nicknames!==undefined) {
-            if(items.censor_nicknames){
-                censor_nicknames();
-            }
+            items.censor_nicknames ? censor_nicknames() : null;
         }
     });
 }
@@ -247,7 +234,14 @@ function colors_changing(backgroud, header, body){
 function checkElementClicked(e){
     try {
         if (e.toElement.attributes[2].value === "perform-guess") {
+            //reset textarea from notes to blank
             noteArea.value = "";
+
+            //delete all screenshots from previous round
+            const screenshots_list = document.querySelectorAll(".screenshots");
+            for(let i=0; i<screenshots_list.length; i++){
+                screenshots_list[i].remove();
+            }
         }
     } catch (e) {}
 }
@@ -258,6 +252,8 @@ function notes(){
         colors_changing(items.themeBackground, items.themeHeader, items.themeBody);
         size_changing(items.fontSizeArea);
     });
+
+    compteurScreenshots=0;
 
     // Make appear or disapear the notes when user click on the notes button
     function openNotes(){
@@ -331,6 +327,7 @@ function notes(){
 
             let divGlobalScreen = document.createElement("div");
             divGlobalScreen.id="divGlobalScreen"+compteurScreenshots;
+            divGlobalScreen.className="screenshots"
             divGlobalScreen.style = "position: absolute; z-index: 4; left: 70px; top: 0px; min-width: 140px;"
             divGlobalScreen.onclick = function () {event.stopPropagation();}
 
@@ -346,31 +343,31 @@ function notes(){
 
             //Button to close a screenshot
             let titleScreen = document.createElement("p")
-            titleScreen.innerText="Screenshot #"+compteurScreenshots;
+            titleScreen.innerText="📸 #"+compteurScreenshots;
             titleScreen.style= "text-align: center;"
             divHeadScreen.appendChild(titleScreen);
+
+            //Button to reduce a screenshot
+            let reduceButton = document.createElement("p")
+            reduceButton.innerText="Reduce | ";
+            reduceButton.style= "cursor: pointer; width: fit-content; display: inline;"
+            reduceButton.onclick = function (){
+                if(reduceButton.innerText==="Reduce | "){
+                    imageDiv.style.display="none"
+                    reduceButton.innerText="Reopen | "
+                }else{
+                    imageDiv.style.display="block"
+                    reduceButton.innerText="Reduce | "
+                }
+            }
+            divHeadScreen.appendChild(reduceButton);
 
             //Button to close a screenshot
             let crossClose = document.createElement("p")
             crossClose.innerText="Close";
-            crossClose.style= "cursor: pointer; text-align: center; width: fit-content;"
+            crossClose.style= "cursor: pointer; width: fit-content; display: inline;"
             crossClose.onclick = function (){ divGlobalScreen.remove() }
             divHeadScreen.appendChild(crossClose);
-
-            //Button to reduce a screenshot
-            let reduceButton = document.createElement("p")
-            reduceButton.innerText="Reduce";
-            reduceButton.style= "cursor: pointer; text-align: center; width: fit-content;"
-            reduceButton.onclick = function (){
-                if(reduceButton.innerText==="Reduce"){
-                    imageDiv.style.display="none"
-                    reduceButton.innerText="Reopen"
-                }else{
-                    imageDiv.style.display="block"
-                    reduceButton.innerText="Reduce"
-                }
-            }
-            divHeadScreen.appendChild(reduceButton);
 
             //increase this variable, used to manage multiple screenshots
             compteurScreenshots++;
@@ -425,14 +422,14 @@ function notes(){
     const game_status = document.querySelector(".game-layout__controls");
 
     //creation the div child for the screen & notes buttons
-    const screenCase = document.createElement("div");
-    game_status.insertBefore(screenCase, game_status.children[1]);
-    screenCase.className="hud-button-group";
+    const divHudButtonGroup = document.createElement("div");
+    game_status.insertBefore(divHudButtonGroup, game_status.children[1]);
+    divHudButtonGroup.className="hud-button-group";
 
     ///////SCREENSHOT///////
     //creating the first child div for SCREENSHOT div
     let screenTooltip = document.createElement("div");
-    screenCase.appendChild(screenTooltip);
+    divHudButtonGroup.appendChild(screenTooltip);
     screenTooltip.className="tooltip";
     screenTooltip.onclick = function(){screenshot()};
     //creating the first child div for screenTooltip div
@@ -445,7 +442,7 @@ function notes(){
     ///////NOTES///////
     //creating the first child div for noteCase div
     let noteTooltip = document.createElement("div");
-    screenCase.appendChild(noteTooltip);
+    divHudButtonGroup.appendChild(noteTooltip);
     noteTooltip.className="tooltip";
     noteTooltip.onclick = function(){dragElement(document.getElementById("divGlobalNote")); openNotes()};
     //creating the first child div for noteTooltip div
