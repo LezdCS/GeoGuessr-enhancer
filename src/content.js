@@ -376,16 +376,18 @@ function notes(){
                     initY = [finalY, finalY = initY][0];
                 }
 
+                let scale = window.devicePixelRatio;
+
                 const CanvasImageScreen = document.createElement("canvas");
                 CanvasImageScreen.style="border:1px solid #000000;"
-                CanvasImageScreen.width = finalX-initX;
-                CanvasImageScreen.height = finalY-initY
+                CanvasImageScreen.width = finalX*scale-initX*scale;
+                CanvasImageScreen.height = finalY*scale-initY*scale
                 let context = CanvasImageScreen.getContext('2d');
                 let imageObj = new Image();
 
                 imageObj.onload = function() {
                     // draw cropped image
-                    context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height, -initX, -initY, imageObj.width, imageObj.height);
+                    context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height, -initX*scale, -initY*scale, imageObj.width, imageObj.height);
                 };
                 imageObj.src = response.message;
                 imageDiv.appendChild(CanvasImageScreen)
