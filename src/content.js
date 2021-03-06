@@ -371,8 +371,11 @@ function notes(){
             //SEND request to background.js to make the screenshot
             chrome.runtime.sendMessage({message: "screenshot"}, function(response) {
 
-                if(initX>finalX && initY>finalY){
+
+                if(initX>finalX ){
                     initX = [finalX, finalX = initX][0];
+                }
+                if(initY>finalY){
                     initY = [finalY, finalY = initY][0];
                 }
 
