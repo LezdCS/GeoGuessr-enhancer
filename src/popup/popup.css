@@ -80,7 +80,6 @@ input::-webkit-color-swatch {
     font-size: 15px;
     width: 70px;
     text-align: left;
-    margin-bottom: 14px;
 }
 
 #fontSizeArea:focus,#name:focus,.buttonTheme:focus,.buttonAccent:focus,input:focus{
