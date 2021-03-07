@@ -182,36 +182,3 @@ chrome.storage.local.get(['blurring_photos', 'censor_nicknames'], function(items
         }
     }
 });
-
-
-
-let notesFeature = document.getElementById("notesFeature")
-notesFeature.onclick=function (){
-    if(notesFeature.checked){
-        chrome.storage.local.set({'notesFeature': true }, function() {});
-    }else{
-        chrome.storage.local.set({'notesFeature': false }, function() {});
-    }
-}
-
-let screenFeature = document.getElementById("screenFeature")
-screenFeature.onclick=function (){
-    if(screenFeature.checked){
-        chrome.storage.local.set({'screenFeature': true }, function() {});
-    }else{
-        chrome.storage.local.set({'screenFeature': false }, function() {});
-    }
-}
-
-chrome.storage.local.get(['notesFeature', 'screenFeature'], function(items) {
-    if(items.notesFeature!==undefined){
-        if(items.notesFeature){
-            notesFeature.checked="true";
-        }
-    }
-    if(items.screenFeature!==undefined) {
-        if(items.screenFeature){
-            screenFeature.checked="true";
-        }
-    }
-});

@@ -400,85 +400,12 @@ function notes(){
         }
     }
 
-    chrome.storage.local.get(['notesFeature', 'screenFeature','themeBackground', 'themeHeader', 'themeBody','fontSizeArea'], function(items) {
-        if(items.screenFeature!==undefined) {
-            if(items.screenFeature){
-                ///////SCREENSHOT///////
-                //creating the first child div for SCREENSHOT div
-
-                divHudButtonGroup.appendChild(screenTooltip);
-                screenTooltip.className="tooltip";
-                screenTooltip.onclick = function(){screenshot()};
-                //creating the first child div for screenTooltip div
-                let screenButton = document.createElement("button");
-                screenTooltip.appendChild(screenButton);
-                screenButton.className="hud-button";
-                screenButton.innerText="📷";
-                screenButton.style.marginTop="16px";
-
-                if(items.notesFeature!==undefined){
-                    if(!items.notesFeature){
-                        screenButton.style.marginBottom="-20px";
-                    }
-                }
-            }
-        }
-        if(items.notesFeature!==undefined){
-            if(items.notesFeature){
-                ///////NOTES///////
-                //creating the first child div for noteCase div
-                let noteTooltip = document.createElement("div");
-                divHudButtonGroup.appendChild(noteTooltip);
-                noteTooltip.className="tooltip";
-                noteTooltip.onclick = function(){dragElement(document.getElementById("divGlobalNote")); openNotes()};
-                //creating the first child div for noteTooltip div
-                let noteButton = document.createElement("button");
-                noteTooltip.appendChild(noteButton);
-                noteButton.className="hud-button";
-                noteButton.innerText="📝";
-                noteButton.style.marginBottom="-20px";
-
-                //creating the first child div for noteButton div
-
-                divGlobalNote.id="divGlobalNote";
-                divGlobalNote.style = "position: absolute; z-index: 4; visibility: hidden;"
-                divGlobalNote.onclick = function () {event.stopPropagation();}
-                noteTooltip.appendChild(divGlobalNote);
-                //header
-                let divHeadNotes = document.createElement("div");
-                divHeadNotes.id="divGlobalNoteHeader";
-                divHeadNotes.style = "padding: 7px; cursor: move; background-color: var(--color-grey-80); color: #fff;"
-                divHeadNotes.onclick = function () {event.stopPropagation();}
-                divGlobalNote.appendChild(divHeadNotes);
-                //title of header
-                let titleNotes = document.createElement("p");
-                titleNotes.style="text-align:center;"
-                titleNotes.innerText="Notes"
-                divHeadNotes.appendChild(titleNotes);
-                //textarea
-                noteArea = document.createElement("textarea");
-                noteArea.className="noteArea";
-                noteArea.id="textarea";
-                noteArea.style = "outline: none !important; font-size: 14px;"
-                noteArea.rows=6;
-                noteArea.cols=33;
-                noteArea.onclick = function () {event.stopPropagation();}
-                divGlobalNote.appendChild(noteArea);
-
-                if(items.screenFeature!==undefined){
-                    if(!items.screenFeature){
-                        noteButton.style.marginTop="16px";
-                    }
-                }
-            }
-        }
-
+    chrome.storage.local.get(['themeBackground', 'themeHeader', 'themeBody','fontSizeArea'], function(items) {
         colors_changing(items.themeBackground, items.themeHeader, items.themeBody);
         size_changing(items.fontSizeArea);
     });
-    let divGlobalNote = document.createElement("div");
 
-    let screenTooltip = document.createElement("div");
+
 
     //getting the group of left buttons
     const game_status = document.querySelector(".game-layout__controls");
@@ -488,6 +415,58 @@ function notes(){
     game_status.insertBefore(divHudButtonGroup, game_status.children[1]);
     divHudButtonGroup.className="hud-button-group";
 
+    ///////SCREENSHOT///////
+    //creating the first child div for SCREENSHOT div
+    let screenTooltip = document.createElement("div");
+    divHudButtonGroup.appendChild(screenTooltip);
+    screenTooltip.className="tooltip";
+    screenTooltip.onclick = function(){screenshot()};
+    //creating the first child div for screenTooltip div
+    let screenButton = document.createElement("button");
+    screenTooltip.appendChild(screenButton);
+    screenButton.className="hud-button";
+    screenButton.innerText="📷";
+    screenButton.style.marginTop="16px";
+
+    ///////NOTES///////
+    //creating the first child div for noteCase div
+    let noteTooltip = document.createElement("div");
+    divHudButtonGroup.appendChild(noteTooltip);
+    noteTooltip.className="tooltip";
+    noteTooltip.onclick = function(){dragElement(document.getElementById("divGlobalNote")); openNotes()};
+    //creating the first child div for noteTooltip div
+    let noteButton = document.createElement("button");
+    noteTooltip.appendChild(noteButton);
+    noteButton.className="hud-button";
+    noteButton.innerText="📝";
+    noteButton.style.marginBottom="-20px";
+
+    //creating the first child div for noteButton div
+    let divGlobalNote = document.createElement("div");
+    divGlobalNote.id="divGlobalNote";
+    divGlobalNote.style = "position: absolute; z-index: 4; visibility: hidden;"
+    divGlobalNote.onclick = function () {event.stopPropagation();}
+    noteTooltip.appendChild(divGlobalNote);
+    //header
+    let divHeadNotes = document.createElement("div");
+    divHeadNotes.id="divGlobalNoteHeader";
+    divHeadNotes.style = "padding: 7px; cursor: move; background-color: var(--color-grey-80); color: #fff;"
+    divHeadNotes.onclick = function () {event.stopPropagation();}
+    divGlobalNote.appendChild(divHeadNotes);
+    //title of header
+    let titleNotes = document.createElement("p");
+    titleNotes.style="text-align:center;"
+    titleNotes.innerText="Notes"
+    divHeadNotes.appendChild(titleNotes);
+    //textarea
+    noteArea = document.createElement("textarea");
+    noteArea.className="noteArea";
+    noteArea.id="textarea";
+    noteArea.style = "outline: none !important; font-size: 14px;"
+    noteArea.rows=6;
+    noteArea.cols=33;
+    noteArea.onclick = function () {event.stopPropagation();}
+    divGlobalNote.appendChild(noteArea);
     
     document.body.addEventListener('click', checkElementClicked)
 
