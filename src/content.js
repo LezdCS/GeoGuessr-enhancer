@@ -196,10 +196,8 @@ function battle_royale_game(){
 
 function size_changing(size){
 
-    try {
-        const notearea = document.getElementById("textarea")
-        notearea.style.fontSize = size + "px";
-    }catch (e) {}
+    const notearea = document.getElementById("textarea")
+    notearea.style.fontSize = size + "px";
 }
 
 function colors_changing(backgroud, header, body){
@@ -217,17 +215,17 @@ function colors_changing(backgroud, header, body){
         game_bodies[i].style.color = body;
     }
 
-    try{
-        const headerNotes = document.getElementById("divGlobalNoteHeader")
 
-        if(backgroud!=="white"){
-            headerNotes.style.backgroundColor = backgroud;
-            headerNotes.style.color = body;
-        }else{
-            headerNotes.style.backgroundColor = "var(--color-grey-80)";
-            headerNotes.style.color = "white";
-        }
-    }catch (e) {}
+    const headerNotes = document.getElementById("divGlobalNoteHeader")
+
+    if(backgroud!=="white"){
+        headerNotes.style.backgroundColor = backgroud;
+        headerNotes.style.color = body;}
+    else{
+        headerNotes.style.backgroundColor = "var(--color-grey-80)";
+        headerNotes.style.color = "white";
+    }
+
 
 }
 
