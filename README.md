@@ -1,5 +1,7 @@
 # GeoGuessr-enhancer
 
+[![DeepScan grade](https://deepscan.io/api/teams/13914/projects/16964/branches/372499/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=13914&pid=16964&bid=372499)
+
 Give the possiblity to the player to take notes about his positions or other informations
 directly from the game.
 
