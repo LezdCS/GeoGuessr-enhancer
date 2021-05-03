@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "version": "1.3.3",
   "author": "Lezd",
   "name": "__MSG_app_name__",
@@ -13,29 +13,32 @@
     "128": "src/icons/icon128.png"
   },
 
-  "background": {
-    "scripts":["src/background.js"],
-    "persistent": false
+  "action": {
+    "default_popup": "src/popup/popup.html"
   },
 
+
   "permissions": [
-    "<all_urls>",
-    "tabs",
-    "storage"
+    "storage",
+    "scripting",
+    "webNavigation"
   ],
 
   "content_scripts": [{
     "js": ["src/content.js"],
-    "matches": ["*://www.geoguessr.com/*"],
+    "matches": ["*://*.geoguessr.com/*"],
     "run_at": "document_idle"
   }],
 
-  "browser_action": {
-    "default_popup": "src/popup/popup.html"
+  "background": {
+    "service_worker": "background.js"
   },
 
-  "web_accessible_resources": [
-    "src/br_blur.css",
-    "src/images/black_background.jpg"
+  "host_permissions": [ "https://*/" ],
+
+  "web_accessible_resources": [{
+    "resources": [ "src/br_blur.css", "src/images/black_background.jpg"],
+    "matches": ["*://*.geoguessr.com/*"]
+  }
   ]
 }
