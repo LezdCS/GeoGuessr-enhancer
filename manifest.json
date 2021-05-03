@@ -27,7 +27,7 @@
     "service_worker": "background.js"
   },
 
-  "host_permissions": [ "https://*/" ],
+  "host_permissions": [ "<all_urls>" ],
 
   "web_accessible_resources": [{
     "resources": [ "src/br_blur.css", "src/images/black_background.jpg"],
