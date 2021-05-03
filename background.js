@@ -33,6 +33,10 @@ chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
     else if (details.url.includes('/battle-royale/')){
         chrome.storage.sync.get('battleroyale-censoring', data => {
             if (data['battleroyale-censoring']) {
+                chrome.scripting.insertCSS({
+                    target: { tabId: details.tabId },
+                    files: ['./src/br_blur.css']
+                });
                 chrome.scripting.executeScript({
                     target: { tabId: details.tabId },
                     files: ['./src/scripts/battleroyale-censoring.js']
