@@ -85,10 +85,11 @@ function checkElementClicked(e) {
 
 
 //getting the group of left side buttons
-const game_status = document.querySelector(".game-layout__controls");
+const game_status = document.querySelector(".game-layout");
 
 //create the div child for screenshot & notes buttons
 const divHudButtonGroup = document.createElement("div");
+divHudButtonGroup.style = "z-index: 100; position: absolute; left:10px; top: 40px"
 game_status.prepend(divHudButtonGroup);
 divHudButtonGroup.className = "hud-button-group";
 
