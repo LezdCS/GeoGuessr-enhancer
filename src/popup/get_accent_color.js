@@ -3,7 +3,7 @@ function changeAccent(color) {
         .setProperty('--color-accent', color);
 }
 
-chrome.storage.local.get(['accentColor'], function(items) {
+chrome.storage.sync.get(['accentColor'], function(items) {
     if(items.accentColor!==undefined) {
         changeAccent(items.accentColor)
     }

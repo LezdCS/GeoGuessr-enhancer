@@ -4,7 +4,7 @@ function addTheme() {
     let newTheme = {};
     const form = document.getElementById("formAddTheme");
 
-    chrome.storage.local.get(['personalisedThemes'], function(items) {
+    chrome.storage.sync.get(['personalisedThemes'], function(items) {
         console.log(items.personalisedThemes)
         if(items.personalisedThemes!==undefined) {
             themesJSON = items.personalisedThemes
@@ -28,7 +28,7 @@ function addTheme() {
         themesJSON!==undefined ? newThemesString = '['+themesJSON.substring(1,themesJSON.length-1)+','+jsonString+']' : newThemesString = '['+jsonString+']';
         console.log("Final themes string : "+newThemesString)
 
-        chrome.storage.local.set({'personalisedThemes': newThemesString }, function() {});
+        chrome.storage.sync.set({'personalisedThemes': newThemesString }, function() {});
 
         //redirect to main page
         window.location="popup.html"
