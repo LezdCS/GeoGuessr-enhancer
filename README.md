@@ -5,9 +5,11 @@
 Give the possiblity to the player to take notes about his positions or other informations
 directly from the game.
 
+## Installation
 Find it on the Chrome web store : 
 https://chrome.google.com/webstore/detail/geoguessr-enhancer/ajnpfenkneeahpbkcpbiclbckgiogbbb
 
+## Milestones
 - 01/01/2021 : 100 users/week 🎉
 - 11/01/2021 : 200 users/week 🎉
 - 11/02/2021 : 300 users/week 🎉
