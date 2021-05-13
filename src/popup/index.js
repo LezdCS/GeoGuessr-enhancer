@@ -1,7 +1,7 @@
 import jsonthemes from './json/themes.js';
 
 function changeTheme(e) {
-    chrome.storage.local.set({'themeBackground': e.background,
+    chrome.storage.sync.set({'themeBackground': e.background,
         'themeHeader': e.text_header, 'themeBody': e.text_body}, function() {
         console.log('Settings saved');
     });
@@ -14,7 +14,7 @@ function changeTheme(e) {
 }
 
 function changeFontSize() {
-    chrome.storage.local.set({'fontSizeArea': inputFontSize.value }, function() {
+    chrome.storage.sync.set({'fontSizeArea': inputFontSize.value }, function() {
         console.log('Settings saved');
     });
 
@@ -26,7 +26,7 @@ function changeFontSize() {
 }
 
 function changeAccent(color) {
-    chrome.storage.local.set({'accentColor': color }, function() {
+    chrome.storage.sync.set({'accentColor': color }, function() {
         console.log('Settings saved');
     });
     document.documentElement.style
@@ -63,11 +63,11 @@ function create_themes(list, perso) {
 }
 
 function delete_theme(theme){
-    chrome.storage.local.get(['personalisedThemes'], function(items) {
+    chrome.storage.sync.get(['personalisedThemes'], function(items) {
         let perso_themes = JSON.parse(items.personalisedThemes)
         console.log(perso_themes.length)
         if(perso_themes.length===1){
-            chrome.storage.local.remove(["personalisedThemes"],function(){})
+            chrome.storage.sync.remove(["personalisedThemes"],function(){})
         }else{
             console.log("before : "+ JSON.stringify(perso_themes))
 
@@ -79,7 +79,7 @@ function delete_theme(theme){
             })
 
             console.log("after : "+ JSON.stringify(perso_themes))
-            chrome.storage.local.set({'personalisedThemes': JSON.stringify(perso_themes) }, function() {});
+            chrome.storage.sync.set({'personalisedThemes': JSON.stringify(perso_themes) }, function() {});
         }
         location.reload();
         return false;
@@ -95,7 +95,7 @@ const themes = document.getElementById("themes");
 //displaying the themes
 create_themes(jsonthemes.themes, false)
 
-chrome.storage.local.get(['personalisedThemes'], function(items) {
+chrome.storage.sync.get(['personalisedThemes'], function(items) {
     if(items.personalisedThemes!==undefined) {
         let perso_themes = items.personalisedThemes
         console.log(perso_themes)
@@ -121,7 +121,7 @@ try{
     var inputFontSize = document.getElementById("fontSizeArea")
     inputFontSize.onchange=changeFontSize;
 
-    chrome.storage.local.get(['fontSizeArea','accentColor'], function(items) {
+    chrome.storage.sync.get(['fontSizeArea','accentColor'], function(items) {
         if(items.accentColor!==undefined) {
             changeAccent(items.accentColor)
         }
@@ -150,27 +150,25 @@ Object.entries(accent_colors).forEach(([key, value]) => {
 });
 
 
-
-
 let blurring_photos = document.getElementById("blurring_photos")
 blurring_photos.onclick=function (){
     if(blurring_photos.checked){
-        chrome.storage.local.set({'blurring_photos': true }, function() {});
+        chrome.storage.sync.set({'blurring_photos': true }, function() {});
     }else{
-        chrome.storage.local.set({'blurring_photos': false }, function() {});
+        chrome.storage.sync.set({'blurring_photos': false }, function() {});
     }
 }
 
 let censor_nicknames = document.getElementById("censor_nicknames")
 censor_nicknames.onclick=function (){
     if(censor_nicknames.checked){
-        chrome.storage.local.set({'censor_nicknames': true }, function() {});
+        chrome.storage.sync.set({'censor_nicknames': true }, function() {});
     }else{
-        chrome.storage.local.set({'censor_nicknames': false }, function() {});
+        chrome.storage.sync.set({'censor_nicknames': false }, function() {});
     }
 }
 
-chrome.storage.local.get(['blurring_photos', 'censor_nicknames'], function(items) {
+chrome.storage.sync.get(['blurring_photos', 'censor_nicknames'], function(items) {
     if(items.blurring_photos!==undefined){
         if(items.blurring_photos){
             blurring_photos.checked="true";

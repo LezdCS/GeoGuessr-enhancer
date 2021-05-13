@@ -1,10 +1,10 @@
 const settings = [
-    'notes-screenshot-theme',
-    'battleroyale-censoring',
+    ['notes-screenshot-theme',true],
+    ['censor_nicknames',false],
+    ['blurring_photos',false]
 ];
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-
     if(request.message==="screenshot"){
         chrome.tabs.captureVisibleTab((screenshotUrl) => {
             sendResponse({message: screenshotUrl});
@@ -21,9 +21,9 @@ function setSetting(name, value) {
 
 chrome.runtime.onInstalled.addListener(() => {
     settings.forEach(setting => {
-        chrome.storage.sync.get(setting, data => {
+        chrome.storage.sync.get(setting[0], data => {
             if (Object.keys(data).length === 0) {
-                setSetting(setting, true);
+                setSetting(setting[0], setting[1]);
             }
         });
     });
@@ -40,12 +40,14 @@ chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
             }
         });
     } else if (details.url.includes('/battle-royale/')) {
-        chrome.storage.sync.get('battleroyale-censoring', data => {
-            if (data['battleroyale-censoring']) {
+        chrome.storage.sync.get(['blurring_photos','censor_nicknames'], data => {
+            if (data['blurring_photos']) {
                 chrome.scripting.insertCSS({
                     target: {tabId: details.tabId},
                     files: ['./src/br_blur.css']
                 });
+            }
+            if(data['censor_nicknames']){
                 chrome.scripting.executeScript({
                     target: {tabId: details.tabId},
                     files: ['./src/scripts/battleroyale-censoring.js']

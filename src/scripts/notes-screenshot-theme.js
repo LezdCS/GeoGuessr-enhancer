@@ -1,8 +1,58 @@
 let noteArea;
-let header;
 let leftpos = "70px", toppos = "0px";
 let initY, initX, finalX, finalY;
 let compteurScreenshots = 0;
+
+chrome.runtime.onMessage.addListener(function (request) {
+    const page = window.location;
+    const url = page.pathname.toString().split("/");
+
+    //Color changing : request from the popup
+    if(request.message.startsWith("changeTheme")){
+        if(url[1] === "game" || url[1]=== "challenge"){
+            const themeINFOS = JSON.parse(request.message.substring(11));
+            colors_changing(themeINFOS.background,themeINFOS.text_header,themeINFOS.text_body);
+        }
+    }
+    //Textarea font size changing : request from the popup
+    if(request.message.startsWith("changeFont")){
+        if(url[1] === "game" || url[1]=== "challenge"){
+            const fontsize = JSON.parse(request.message.substring(10));
+            noteArea.style.fontSize = fontsize + "px";
+        }
+    }
+});
+
+function colors_changing(background, header, body){
+
+    const game_infos = document.getElementsByClassName("game-statuses");
+    for(let i = 0; i < game_infos.length; i++) {
+        game_infos[i].style.backgroundColor = background;
+    }
+    const game_headers = document.getElementsByClassName("game-status__heading");
+    for(let i = 0; i < game_headers.length; i++) {
+        game_headers[i].style.color = header;
+    }
+    const game_bodies = document.getElementsByClassName("game-status__body");
+    for(let i = 0; i < game_bodies.length; i++) {
+        game_bodies[i].style.color = body;
+    }
+
+    const headerNotes = document.getElementById("divGlobalNoteHeader")
+
+    if(background!=="white"){
+        headerNotes.style.backgroundColor = background;
+        headerNotes.style.color = body;}
+    else{
+        headerNotes.style.backgroundColor = "var(--color-grey-80)";
+        headerNotes.style.color = "white";
+    }
+}
+
+chrome.storage.sync.get(['themeBackground', 'themeHeader', 'themeBody','fontSizeArea'], function(items) {
+    colors_changing(items.themeBackground, items.themeHeader, items.themeBody);
+    noteArea.style.fontSize = items.fontSizeArea + "px";
+});
 
 function openNotes() {
 
@@ -18,6 +68,7 @@ function openNotes() {
 
 function checkElementClicked(e) {
     try {
+        //if the user do a guess in-game
         if (e.toElement.attributes[2].value === "perform-guess") {
             //reset textarea from notes to blank
             noteArea.value = "";
@@ -33,12 +84,12 @@ function checkElementClicked(e) {
 }
 
 
-//getting the group of left buttons
+//getting the group of left side buttons
 const game_status = document.querySelector(".game-layout__controls");
 
-//creation the div child for the screen & notes buttons
+//create the div child for screenshot & notes buttons
 const divHudButtonGroup = document.createElement("div");
-game_status.insertBefore(divHudButtonGroup, game_status.children[1]);
+game_status.prepend(divHudButtonGroup);
 divHudButtonGroup.className = "hud-button-group";
 
 ///////SCREENSHOT///////
@@ -107,8 +158,6 @@ divGlobalNote.appendChild(noteArea);
 
 document.body.addEventListener('click', checkElementClicked)
 
-header = document.getElementsByClassName("header")[0];
-
 
 function dragElement(elmnt) {
 
@@ -173,7 +222,7 @@ function dragElement(elmnt) {
             }
         }
         //check Top collision
-        else if (elmnt.getBoundingClientRect().top <= header.offsetHeight) {
+        else if (elmnt.getBoundingClientRect().top <= document.getElementsByClassName("header")[0].offsetHeight) {
             if (e.clientY > prevY) {
                 move_notes_window();
             }
@@ -261,7 +310,8 @@ function screenshot() {
         }
         divGlobalScreen.appendChild(divHeadScreen);
 
-        dragElement(document.getElementById("divGlobalScreen" + compteurScreenshots));
+        /*dragElement(divHeadScreen);*/
+        dragElement(document.getElementById("divGlobalScreen"+compteurScreenshots));
 
         //Button to close a screenshot
         let titleScreen = document.createElement("p")
@@ -325,7 +375,7 @@ function screenshot() {
             imageObj.src = response.message;
             imageDiv.appendChild(CanvasImageScreen)
 
-            //prevent the screenshot from integrating the screenshot frame created before
+            //FIXME: prevent the screenshot from integrating the screenshot frame created before
             divHeadScreen.style.visibility = "visible"
             divGlobalScreen.appendChild(imageDiv)
         });
