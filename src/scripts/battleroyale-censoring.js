@@ -1,6 +1,5 @@
 let ListObserver = new MutationObserver(function (mutations) {
     for (let mutation of mutations) {
-        console.log(mutation.target.className)
         if (mutation.type === 'childList') {
             if (mutation.target.className === "user-nick") {
                 if (mutation.previousSibling?.data) {
