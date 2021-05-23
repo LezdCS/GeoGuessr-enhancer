@@ -30,7 +30,7 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
-    if (details.url.includes('/game')) {
+    if (details.url.includes('/game') || details.url.includes('/challenge')) {
         chrome.storage.sync.get('notes-screenshot-theme', data => {
             if (data['notes-screenshot-theme']) {
                 chrome.scripting.executeScript({
