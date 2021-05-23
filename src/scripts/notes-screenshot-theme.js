@@ -1,7 +1,12 @@
-let noteArea;
-let leftpos = "70px", toppos = "0px";
-let initY, initX, finalX, finalY;
-let compteurScreenshots = 0;
+if (typeof noteArea === 'undefined'){
+    let noteArea;
+    leftpos = "70px"; toppos = "0px";
+    let initY, initX, finalX, finalY;
+    compteurScreenshots = 0;
+}else{
+    compteurScreenshots = 0;
+}
+
 
 chrome.runtime.onMessage.addListener(function (request) {
     const page = window.location;
@@ -83,83 +88,86 @@ function checkElementClicked(e) {
     }
 }
 
-
+if(document.getElementById('divHudButtonGroup') === null) {
 //getting the group of left side buttons
-const game_status = document.querySelector(".game-layout");
+    const game_status = document.querySelector(".game-layout");
+
 
 //create the div child for screenshot & notes buttons
-const divHudButtonGroup = document.createElement("div");
-divHudButtonGroup.style = "z-index: 100; position: absolute; left:10px; top: 40px"
-game_status.prepend(divHudButtonGroup);
-divHudButtonGroup.className = "hud-button-group";
+    const divHudButtonGroup = document.createElement("div");
+    divHudButtonGroup.style = "z-index: 100; position: absolute; left:10px; top: 40px"
+    divHudButtonGroup.id = 'divHudButtonGroup'
+    game_status.prepend(divHudButtonGroup);
+    divHudButtonGroup.className = "hud-button-group";
 
 ///////SCREENSHOT///////
 //creating the first child div for SCREENSHOT div
-let screenTooltip = document.createElement("div");
-divHudButtonGroup.appendChild(screenTooltip);
-screenTooltip.className = "tooltip";
-screenTooltip.onclick = function () {
-    screenshot()
-};
+    let screenTooltip = document.createElement("div");
+    screenTooltip.id = 'screenTooltip'
+    divHudButtonGroup.appendChild(screenTooltip);
+    screenTooltip.className = "tooltip";
+    screenTooltip.onclick = function () {
+        screenshot()
+    };
 //creating the first child div for screenTooltip div
-let screenButton = document.createElement("button");
-screenTooltip.appendChild(screenButton);
-screenButton.className = "hud-button";
-screenButton.innerText = "📷";
-screenButton.style.marginTop = "16px";
+    let screenButton = document.createElement("button");
+    screenTooltip.appendChild(screenButton);
+    screenButton.className = "hud-button";
+    screenButton.innerText = "📷";
+    screenButton.style.marginTop = "16px";
 
 ///////NOTES///////
 //creating the first child div for noteCase div
-let noteTooltip = document.createElement("div");
-divHudButtonGroup.appendChild(noteTooltip);
-noteTooltip.className = "tooltip";
-noteTooltip.onclick = function () {
-    dragElement(document.getElementById("divGlobalNote"));
-    openNotes()
-};
+    let noteTooltip = document.createElement("div");
+    divHudButtonGroup.appendChild(noteTooltip);
+    noteTooltip.className = "tooltip";
+    noteTooltip.onclick = function () {
+        dragElement(document.getElementById("divGlobalNote"));
+        openNotes()
+    };
 //creating the first child div for noteTooltip div
-let noteButton = document.createElement("button");
-noteTooltip.appendChild(noteButton);
-noteButton.className = "hud-button";
-noteButton.innerText = "📝";
-noteButton.style.marginBottom = "-20px";
+    let noteButton = document.createElement("button");
+    noteTooltip.appendChild(noteButton);
+    noteButton.className = "hud-button";
+    noteButton.innerText = "📝";
+    noteButton.style.marginBottom = "-20px";
 
 //creating the first child div for noteButton div
-let divGlobalNote = document.createElement("div");
-divGlobalNote.id = "divGlobalNote";
-divGlobalNote.style = "position: absolute; z-index: 4; visibility: hidden;"
-divGlobalNote.onclick = function () {
-    event.stopPropagation();
-}
-noteTooltip.appendChild(divGlobalNote);
+    let divGlobalNote = document.createElement("div");
+    divGlobalNote.id = "divGlobalNote";
+    divGlobalNote.style = "position: absolute; z-index: 4; visibility: hidden;"
+    divGlobalNote.onclick = function () {
+        event.stopPropagation();
+    }
+    noteTooltip.appendChild(divGlobalNote);
 //header
-let divHeadNotes = document.createElement("div");
-divHeadNotes.id = "divGlobalNoteHeader";
-divHeadNotes.style = "padding: 7px; cursor: move; background-color: var(--color-grey-80); color: #fff;"
-divHeadNotes.onclick = function () {
-    event.stopPropagation();
-}
-divGlobalNote.appendChild(divHeadNotes);
+    let divHeadNotes = document.createElement("div");
+    divHeadNotes.id = "divGlobalNoteHeader";
+    divHeadNotes.style = "padding: 7px; cursor: move; background-color: var(--color-grey-80); color: #fff;"
+    divHeadNotes.onclick = function () {
+        event.stopPropagation();
+    }
+    divGlobalNote.appendChild(divHeadNotes);
 //title of header
-let titleNotes = document.createElement("p");
-titleNotes.style = "text-align:center;"
-titleNotes.innerText = "Notes"
-divHeadNotes.appendChild(titleNotes);
+    let titleNotes = document.createElement("p");
+    titleNotes.style = "text-align:center;"
+    titleNotes.innerText = "Notes"
+    divHeadNotes.appendChild(titleNotes);
 //textarea
-noteArea = document.createElement("textarea");
-noteArea.className = "noteArea";
-noteArea.id = "textarea";
-noteArea.style = "outline: none !important; font-size: 14px;"
-noteArea.rows = 6;
-noteArea.cols = 33;
-noteArea.onclick = function () {
-    event.stopPropagation();
+    noteArea = document.createElement("textarea");
+    noteArea.className = "noteArea";
+    noteArea.id = "textarea";
+    noteArea.style = "outline: none !important; font-size: 14px;"
+    noteArea.rows = 6;
+    noteArea.cols = 33;
+    noteArea.onclick = function () {
+        event.stopPropagation();
+    }
+    divGlobalNote.appendChild(noteArea);
+
+    document.body.addEventListener('click', checkElementClicked)
+
 }
-divGlobalNote.appendChild(noteArea);
-
-document.body.addEventListener('click', checkElementClicked)
-
-
 function dragElement(elmnt) {
 
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0, prevX = 0, prevY = 0;
@@ -301,7 +309,7 @@ function screenshot() {
             event.stopPropagation();
         }
 
-        screenTooltip.appendChild(divGlobalScreen);
+        document.getElementById('screenTooltip').appendChild(divGlobalScreen);
         //header
         let divHeadScreen = document.createElement("div");
         divHeadScreen.id = "divGlobalScreen" + compteurScreenshots + "Header" + compteurScreenshots;
