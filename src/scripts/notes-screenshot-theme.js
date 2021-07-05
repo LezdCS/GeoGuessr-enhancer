@@ -128,7 +128,7 @@ function globalFunction() {
         divHudButtonGroup.style = "z-index: 100; position: absolute; left:10px; top: 40px"
         divHudButtonGroup.id = 'divHudButtonGroup'
         game_status.prepend(divHudButtonGroup);
-        divHudButtonGroup.className = "hud-button-group";
+        divHudButtonGroup.className = "styles_hudButtonGroup__BcSQe";
 
 ///////SCREENSHOT///////
 //creating the first child div for SCREENSHOT div
@@ -142,7 +142,7 @@ function globalFunction() {
 //creating the first child div for screenTooltip div
         let screenButton = document.createElement("button");
         screenTooltip.appendChild(screenButton);
-        screenButton.className = "hud-button";
+        screenButton.className = "styles_hudButton__1voEx";
         screenButton.innerText = "📷";
         screenButton.style.marginTop = "16px";
 
@@ -158,7 +158,7 @@ function globalFunction() {
 //creating the first child div for noteTooltip div
         let noteButton = document.createElement("button");
         noteTooltip.appendChild(noteButton);
-        noteButton.className = "hud-button";
+        noteButton.className = "styles_hudButton__1voEx";
         noteButton.innerText = "📝";
         noteButton.style.marginBottom = "-20px";
 
