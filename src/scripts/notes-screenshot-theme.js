@@ -5,7 +5,7 @@ function globalFunction() {
         let noteArea;
         leftpos = "70px";
         toppos = "0px";
-        let initY, initX, finalX, finalY;
+
         compteurScreenshots = 0;
     } else {
         compteurScreenshots = 0;
@@ -78,7 +78,8 @@ function globalFunction() {
     function checkElementClicked(e) {
         try {
             //if the user do a guess in-game
-            if (e.toElement.attributes[2].value === "perform-guess") {
+            console.log(e.target.className)
+            if (e.target.className === "button_wrapper__2FHZt") {
                 //reset textarea from notes to blank
                 noteArea.value = "";
 
@@ -96,12 +97,12 @@ function globalFunction() {
         //getting the group of left side buttons
         const game_status = document.querySelector(".game-layout");
 
-        if(game_status === null){
+        if (game_status === null) {
             let ListObserver = new MutationObserver(function (mutations) {
                 for (let mutation of mutations) {
                     console.log(mutation.target.className)
                     if (mutation.type === 'childList') {
-                        if (mutation.target.className==='game-layout__panorama') {
+                        if (mutation.target.className === 'game-layout__panorama') {
                             globalFunction();
                         }
                     }
@@ -114,35 +115,26 @@ function globalFunction() {
             });
         }
 
-/*        if (game_status === null) {
-            const start_challenge_button = document.querySelector('[data-qa="join-challenge-button"]');
-            start_challenge_button.addEventListener('click', function () {
-                if(game_status === null){
-                    globalFunction()
-                }
-            });
-        }*/
-
 //create the div child for screenshot & notes buttons
         const divHudButtonGroup = document.createElement("div");
-        divHudButtonGroup.style = "z-index: 100; position: absolute; left:10px; top: 40px"
+        divHudButtonGroup.style = "z-index: 100; position: absolute; left:1.5rem; top: 1rem; user-select: none;"
         divHudButtonGroup.id = 'divHudButtonGroup'
         game_status.prepend(divHudButtonGroup);
-        divHudButtonGroup.className = "styles_hudButtonGroup__BcSQe";
+        divHudButtonGroup.className = "styles_controlGroup__2pd1f";
 
 ///////SCREENSHOT///////
 //creating the first child div for SCREENSHOT div
         let screenTooltip = document.createElement("div");
         screenTooltip.id = 'screenTooltip'
         divHudButtonGroup.appendChild(screenTooltip);
-        screenTooltip.className = "tooltip";
+        screenTooltip.className = "";
         screenTooltip.onclick = function () {
             screenshot()
         };
 //creating the first child div for screenTooltip div
         let screenButton = document.createElement("button");
         screenTooltip.appendChild(screenButton);
-        screenButton.className = "styles_hudButton__1voEx";
+        screenButton.className = "styles_hudButton__1voEx styles_sizeLarge__184TG styles_roundTop__1Yb6m";
         screenButton.innerText = "📷";
         screenButton.style.marginTop = "16px";
 
@@ -150,7 +142,7 @@ function globalFunction() {
 //creating the first child div for noteCase div
         let noteTooltip = document.createElement("div");
         divHudButtonGroup.appendChild(noteTooltip);
-        noteTooltip.className = "tooltip";
+        noteTooltip.className = "";
         noteTooltip.onclick = function () {
             dragElement(document.getElementById("divGlobalNote"));
             openNotes()
@@ -158,7 +150,7 @@ function globalFunction() {
 //creating the first child div for noteTooltip div
         let noteButton = document.createElement("button");
         noteTooltip.appendChild(noteButton);
-        noteButton.className = "styles_hudButton__1voEx";
+        noteButton.className = "styles_hudButton__1voEx styles_sizeLarge__184TG styles_roundBottom__1hv6E";
         noteButton.innerText = "📝";
         noteButton.style.marginBottom = "-20px";
 
@@ -180,7 +172,7 @@ function globalFunction() {
         divGlobalNote.appendChild(divHeadNotes);
 //title of header
         let titleNotes = document.createElement("p");
-        titleNotes.style = "text-align:center;"
+        titleNotes.style = "text-align:center; user-select: none;"
         titleNotes.innerText = "Notes"
         divHeadNotes.appendChild(titleNotes);
 //textarea
@@ -262,7 +254,7 @@ function globalFunction() {
                 }
             }
             //check Top collision
-            else if (elmnt.getBoundingClientRect().top <= document.getElementsByClassName("header")[0].offsetHeight) {
+            else if (elmnt.getBoundingClientRect().top <= 0) {
                 if (e.clientY > prevY) {
                     move_notes_window();
                 }
@@ -356,7 +348,7 @@ function globalFunction() {
             //Button to close a screenshot
             let titleScreen = document.createElement("p")
             titleScreen.innerText = "📸 #" + compteurScreenshots;
-            titleScreen.style = "text-align: center;"
+            titleScreen.style = "text-align: center; user-select: none;"
             divHeadScreen.appendChild(titleScreen);
 
             //Button to reduce a screenshot
