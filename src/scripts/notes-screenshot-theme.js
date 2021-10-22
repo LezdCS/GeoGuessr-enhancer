@@ -2,11 +2,11 @@ globalFunction();
 
 function globalFunction() {
     if (typeof noteArea === 'undefined') {
-        let noteArea;
-        leftpos = "70px";
-        toppos = "0px";
+        var noteArea;
+        var leftpos = "70px";
+        var toppos = "0px";
 
-        compteurScreenshots = 0;
+        var compteurScreenshots = 0;
     } else {
         compteurScreenshots = 0;
     }
@@ -33,19 +33,6 @@ function globalFunction() {
     });
 
     function colors_changing(background, header, body) {
-
-        const game_infos = document.getElementsByClassName("game-statuses");
-        for (let i = 0; i < game_infos.length; i++) {
-            game_infos[i].style.backgroundColor = background;
-        }
-        const game_headers = document.getElementsByClassName("game-status__heading");
-        for (let i = 0; i < game_headers.length; i++) {
-            game_headers[i].style.color = header;
-        }
-        const game_bodies = document.getElementsByClassName("game-status__body");
-        for (let i = 0; i < game_bodies.length; i++) {
-            game_bodies[i].style.color = body;
-        }
 
         const headerNotes = document.getElementById("divGlobalNoteHeader")
 
@@ -85,8 +72,8 @@ function globalFunction() {
 
                 //delete all screenshots from previous round
                 const screenshots_list = document.querySelectorAll(".screenshots");
-                for (let i = 0; i < screenshots_list.length; i++) {
-                    screenshots_list[i].remove();
+                for (const screenshotsListElement of screenshots_list) {
+                    screenshotsListElement.remove();
                 }
             }
         } catch (e) {
@@ -155,7 +142,7 @@ function globalFunction() {
         noteButton.style.marginBottom = "-20px";
 
 //creating the first child div for noteButton div
-        let divGlobalNote = document.createElement("div");
+        var divGlobalNote = document.createElement("div");
         divGlobalNote.id = "divGlobalNote";
         divGlobalNote.style = "position: absolute; z-index: 4; visibility: hidden;"
         divGlobalNote.onclick = function () {
@@ -280,7 +267,7 @@ function globalFunction() {
         divScreenshot.style = "z-index: 1; position: absolute;"
         game_layout.appendChild(divScreenshot)
 
-        let darkImage = document.createElement("img")
+        var darkImage = document.createElement("img")
         darkImage.src = chrome.runtime.getURL("src/images/black_background.jpg");
         darkImage.style = "z-index: 1; position: absolute; opacity: 50%; cursor: crosshair; -webkit-user-drag: none;"
         divScreenshot.appendChild(darkImage)
@@ -318,7 +305,7 @@ function globalFunction() {
                 game_layout.onmouseup = null;
 
                 divScreenshot.remove();
-                generateScreenshot();
+                setTimeout(generateScreenshot,100)
             }
         }
 
@@ -407,7 +394,6 @@ function globalFunction() {
                 imageObj.src = response.message;
                 imageDiv.appendChild(CanvasImageScreen)
 
-                //FIXME: prevent the screenshot from integrating the screenshot frame created before
                 divHeadScreen.style.visibility = "visible"
                 divGlobalScreen.appendChild(imageDiv)
             });
