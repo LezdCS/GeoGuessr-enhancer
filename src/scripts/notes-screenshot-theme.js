@@ -172,6 +172,10 @@ function globalFunction() {
         noteArea.onclick = function () {
             event.stopPropagation();
         }
+        noteArea.onkeyup = function () {
+            event.stopPropagation();
+            event.preventDefault();
+        }
         divGlobalNote.appendChild(noteArea);
 
         document.body.addEventListener('click', checkElementClicked)
