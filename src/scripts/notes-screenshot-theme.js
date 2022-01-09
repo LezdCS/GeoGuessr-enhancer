@@ -65,7 +65,6 @@ function globalFunction() {
     function checkElementClicked(e) {
         try {
             //if the user do a guess in-game
-            console.log(e.target.className)
             if (e.target.className === "button_wrapper__2FHZt") {
                 //reset textarea from notes to blank
                 noteArea.value = "";
@@ -107,7 +106,7 @@ function globalFunction() {
         divHudButtonGroup.style = "z-index: 100; position: absolute; left:1.5rem; top: 1rem; user-select: none;"
         divHudButtonGroup.id = 'divHudButtonGroup'
         game_status.prepend(divHudButtonGroup);
-        divHudButtonGroup.className = "styles_controlGroup__2pd1f";
+        divHudButtonGroup.className = "styles_controlGroup___ArrW";
 
 ///////SCREENSHOT///////
 //creating the first child div for SCREENSHOT div
@@ -121,7 +120,7 @@ function globalFunction() {
 //creating the first child div for screenTooltip div
         let screenButton = document.createElement("button");
         screenTooltip.appendChild(screenButton);
-        screenButton.className = "styles_hudButton__1voEx styles_sizeLarge__184TG styles_roundTop__1Yb6m";
+        screenButton.className = "styles_hudButton__YGy3X styles_sizeLarge__id5Eb styles_roundTop__OX89q";
         screenButton.innerText = "📷";
         screenButton.style.marginTop = "16px";
 
@@ -137,7 +136,7 @@ function globalFunction() {
 //creating the first child div for noteTooltip div
         let noteButton = document.createElement("button");
         noteTooltip.appendChild(noteButton);
-        noteButton.className = "styles_hudButton__1voEx styles_sizeLarge__184TG styles_roundBottom__1hv6E";
+        noteButton.className = "styles_hudButton__YGy3X styles_sizeLarge__id5Eb styles_roundBottom__rxcI_";
         noteButton.innerText = "📝";
         noteButton.style.marginBottom = "-20px";
 
