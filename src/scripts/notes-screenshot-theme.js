@@ -105,8 +105,9 @@ function globalFunction() {
         const divHudButtonGroup = document.createElement("div");
         divHudButtonGroup.style = "z-index: 100; position: absolute; left:1.5rem; top: 1rem; user-select: none;"
         divHudButtonGroup.id = 'divHudButtonGroup'
+        divHudButtonGroup.style.display = "inline-flex";
+        divHudButtonGroup.style.flexDirection = "column";
         game_status.prepend(divHudButtonGroup);
-        divHudButtonGroup.className = "styles_controlGroup___ArrW";
 
 ///////SCREENSHOT///////
 //creating the first child div for SCREENSHOT div
@@ -120,7 +121,19 @@ function globalFunction() {
 //creating the first child div for screenTooltip div
         let screenButton = document.createElement("button");
         screenTooltip.appendChild(screenButton);
-        screenButton.className = "styles_hudButton__YGy3X styles_sizeLarge__id5Eb styles_roundTop__OX89q";
+
+        screenButton.style.borderTopLeftRadius = "1.75rem"
+        screenButton.style.borderTopRightRadius = "1.75rem"
+        screenButton.style.height = "3.5rem"
+
+        screenButton.style.background =  "rgba(0,0,0,.6)";
+        screenButton.style.border = "0";
+        screenButton.style.borderBottom = "0.0625rem solid rgba(0,0,0,.4)";
+        screenButton.style.cursor = "pointer";
+        screenButton.styleheight = "3rem";
+        screenButton.stylepadding = " 0.75rem";
+        screenButton.style.width = "3rem";
+
         screenButton.innerText = "📷";
         screenButton.style.marginTop = "16px";
 
@@ -136,7 +149,19 @@ function globalFunction() {
 //creating the first child div for noteTooltip div
         let noteButton = document.createElement("button");
         noteTooltip.appendChild(noteButton);
-        noteButton.className = "styles_hudButton__YGy3X styles_sizeLarge__id5Eb styles_roundBottom__rxcI_";
+
+        noteButton.style.borderBottomLeftRadius = "1.75rem"
+        noteButton.style.borderBottomRightRadius = "1.75rem"
+        noteButton.style.height = "3.5rem"
+
+        noteButton.style.background =  "rgba(0,0,0,.6)";
+        noteButton.style.border = "0";
+        noteButton.style.borderBottom = "0.0625rem solid rgba(0,0,0,.4)";
+        noteButton.style.cursor = "pointer";
+        noteButton.styleheight = "3rem";
+        noteButton.stylepadding = " 0.75rem";
+        noteButton.style.width = "3rem";
+
         noteButton.innerText = "📝";
         noteButton.style.marginBottom = "-20px";
 
